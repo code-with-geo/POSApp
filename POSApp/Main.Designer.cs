@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             dataGridView1 = new DataGridView();
             comboBox1 = new ComboBox();
@@ -36,7 +36,7 @@
             label2 = new Label();
             label3 = new Label();
             lblTotalAmount = new Label();
-            label5 = new Label();
+            lblDiscount = new Label();
             panel1 = new Panel();
             button1 = new Button();
             button2 = new Button();
@@ -69,14 +69,14 @@
             dataGridView1.BackgroundColor = Color.White;
             dataGridView1.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dataGridView1.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = Color.Black;
-            dataGridViewCellStyle2.Font = new Font("Courier New", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = Color.Black;
+            dataGridViewCellStyle1.Font = new Font("Courier New", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dataGridView1.ColumnHeadersHeight = 30;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dataGridView1.EnableHeadersVisualStyles = false;
@@ -147,15 +147,15 @@
             lblTotalAmount.TabIndex = 14;
             lblTotalAmount.Text = "0.00";
             // 
-            // label5
+            // lblDiscount
             // 
-            label5.AutoSize = true;
-            label5.Location = new Point(392, 10);
-            label5.Margin = new Padding(2, 0, 2, 0);
-            label5.Name = "label5";
-            label5.Size = new Size(39, 16);
-            label5.TabIndex = 13;
-            label5.Text = "0.00";
+            lblDiscount.AutoSize = true;
+            lblDiscount.Location = new Point(392, 10);
+            lblDiscount.Margin = new Padding(2, 0, 2, 0);
+            lblDiscount.Name = "lblDiscount";
+            lblDiscount.Size = new Size(39, 16);
+            lblDiscount.TabIndex = 13;
+            lblDiscount.Text = "0.00";
             // 
             // panel1
             // 
@@ -204,6 +204,7 @@
             button2.Text = "Browse Product";
             button2.TextAlign = ContentAlignment.BottomLeft;
             button2.UseVisualStyleBackColor = false;
+            button2.Click += button2_Click_1;
             // 
             // button3
             // 
@@ -351,7 +352,7 @@
             panel2.Controls.Add(lblVatSale);
             panel2.Controls.Add(label2);
             panel2.Controls.Add(label3);
-            panel2.Controls.Add(label5);
+            panel2.Controls.Add(lblDiscount);
             panel2.Controls.Add(lblTotalAmount);
             panel2.Location = new Point(10, 397);
             panel2.Name = "panel2";
@@ -520,7 +521,7 @@
         private Label label2;
         private Label label3;
         private Label lblTotalAmount;
-        private Label label5;
+        private Label lblDiscount;
         private Panel panel1;
         private Button button1;
         private Button button2;

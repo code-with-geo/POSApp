@@ -397,6 +397,58 @@ namespace POSApp.Class
             }
         }
 
+        public static List<Inventory> LoadInventoryList()
+        {
+            List<Inventory> inventoryList = new List<Inventory>();
+
+            try
+            {
+                using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+                {
+                    connection.Open();
+
+                    string query = @"
+                SELECT 
+                    I.InventoryId,
+                    I.Specification,
+                    I.Units,
+                    I.ProductId,
+                    I.LocationId,
+                    I.Status,
+                    I.DateCreated
+                FROM Inventory I;";
+
+                    using (var command = new SQLiteCommand(query, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                inventoryList.Add(new Inventory
+                                {
+                                    InventoryId = reader.GetInt32(reader.GetOrdinal("InventoryId")),
+                                    Specification = reader.GetString(reader.GetOrdinal("Specification")),
+                                    Units = reader.GetInt32(reader.GetOrdinal("Units")),
+                                    ProductId = reader.GetInt32(reader.GetOrdinal("ProductId")),
+                                    LocationId = reader.GetInt32(reader.GetOrdinal("LocationId")),
+                                    Status = reader.GetInt32(reader.GetOrdinal("Status")),
+                                    DateCreated = reader.IsDBNull(reader.GetOrdinal("DateCreated")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("DateCreated"))
+                                });
+                            }
+                        }
+                    }
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching inventory: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return inventoryList;
+        }
+
         public static DataTable GetInventory()
         {
             DataTable dataTable = new DataTable();
@@ -413,7 +465,9 @@ namespace POSApp.Class
                             P.Name, 
                             I.Units, 
                             I.Specification, 
-                            P.RetailPrice 
+                            P.RetailPrice,
+                            p.WholesalePrice,
+                            P.SupplierPrice  
                         FROM Inventory I 
                         INNER JOIN Products P ON I.ProductId = P.Id;";
 
@@ -479,6 +533,51 @@ namespace POSApp.Class
                 MessageBox.Show($"Error fetching product: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return null;
+        }
+
+        public static DataTable GetFilteredInventory(string filter)
+        {
+            DataTable dataTable = new DataTable();
+
+            try
+            {
+                using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+                {
+                    connection.Open();
+
+                    string query = @"
+                SELECT 
+                    P.Barcode, 
+                    P.Name, 
+                    I.Units, 
+                    I.Specification, 
+                    P.RetailPrice,
+                    P.WholesalePrice,
+                    P.SupplierPrice  
+                FROM Inventory I 
+                INNER JOIN Products P ON I.ProductId = P.Id
+                WHERE P.Name LIKE @Filter || '%'"; // Filters names starting with the input
+
+                    using (var command = new SQLiteCommand(query, connection))
+                    {
+                        // Add filter parameter to prevent SQL injection
+                        command.Parameters.AddWithValue("@Filter", filter);
+
+                        using (var adapter = new SQLiteDataAdapter(command))
+                        {
+                            adapter.Fill(dataTable);
+                        }
+                    }
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error filtering inventory: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return dataTable;
         }
     }
 }

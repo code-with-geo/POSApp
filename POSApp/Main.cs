@@ -16,6 +16,7 @@ namespace POSApp
     public partial class Main : Form
     {
         private List<Cart> displayedProducts = new List<Cart>();
+        private List<Inventory> inventoryList = new List<Inventory>();
         public Main()
         {
             InitializeComponent();
@@ -29,7 +30,7 @@ namespace POSApp
         private void button1_Click(object sender, EventArgs e)
         {
             BrowseProduct browse = new BrowseProduct();
-            browse.Show();
+            browse.ShowDialog();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -43,6 +44,12 @@ namespace POSApp
             // Fetch data and bind to DataGridView
             //var inventoryData = DatabaseHelper.GetInventory();
             // dataGridView1.DataSource = inventoryData;
+            inventoryList = DatabaseHelper.LoadInventoryList();
+            lblVatSale.Text = 0.ToString("C2");
+            lblVatAmount.Text = 0.ToString("C2");
+            lblTotalAmount.Text = 0.ToString("C2");
+            lblVatExempt.Text = 0.ToString("C2");
+            lblDiscount.Text = 0.ToString("C2");
 
         }
 
@@ -53,27 +60,48 @@ namespace POSApp
 
         private async void button5_Click(object sender, EventArgs e)
         {
-            string apiUrl = "https://localhost:7148/api/products";
-            string apiUrl2 = "https://localhost:7148/api/locations";
-            string apiUrl3 = "https://localhost:7148/api/category";
-            string apiUrl4 = "https://localhost:7148/api/inventory";
-            string authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6ImRjOGVjOWIzLTg1MzMtNGI4MC1iNzQ0LWJjODgwZGUxY2Q5NyIsImV4cCI6MTczNjI1MjU2OSwiaXNzIjoiSnd0QXV0aEFwaSIsImF1ZCI6Ikp3dEF1dGhBcGlVc2VycyJ9.UYBAsidHf4Wm9tHkC3xDp5Rf-zGoKhZGGnNexpN6vKw"; // Replace with your token
+            displayedProducts.Clear();
+            RefreshDataGridView();
+            DisplayTotalAmount();
+            DisplayVatSale();
+            DisplayVatAmount();
+            /* string apiUrl = "https://localhost:7148/api/products";
+             string apiUrl2 = "https://localhost:7148/api/locations";
+             string apiUrl3 = "https://localhost:7148/api/category";
+             string apiUrl4 = "https://localhost:7148/api/inventory";
+             string authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6ImRjOGVjOWIzLTg1MzMtNGI4MC1iNzQ0LWJjODgwZGUxY2Q5NyIsImV4cCI6MTczNjI1MjU2OSwiaXNzIjoiSnd0QXV0aEFwaSIsImF1ZCI6Ikp3dEF1dGhBcGlVc2VycyJ9.UYBAsidHf4Wm9tHkC3xDp5Rf-zGoKhZGGnNexpN6vKw"; // Replace with your token
 
-            await DatabaseHelper.SyncProducts(apiUrl, authToken);
-            await DatabaseHelper.SyncLocations(apiUrl2, authToken);
-            await DatabaseHelper.SyncCategory(apiUrl3, authToken);
-            await DatabaseHelper.SyncInventory(apiUrl4, authToken);
+             await DatabaseHelper.SyncProducts(apiUrl, authToken);
+             await DatabaseHelper.SyncLocations(apiUrl2, authToken);
+             await DatabaseHelper.SyncCategory(apiUrl3, authToken);
+             await DatabaseHelper.SyncInventory(apiUrl4, authToken);*/
         }
 
         private void AddProductToCart()
         {
             if (int.TryParse(txtBarcode.Text, out int productId))
             {
+                // Fetch the product inventory details
+                var inventory = inventoryList.FirstOrDefault(i => i.ProductId == productId && i.LocationId == 1);
+
+                if (inventory == null)
+                {
+                    MessageBox.Show($"No inventory found for Product ID {productId} at this location.", "Inventory Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 // Check if the product already exists in displayedProducts
                 var existingProduct = displayedProducts.FirstOrDefault(p => p.Id == productId);
 
                 if (existingProduct != null)
                 {
+                    // Check if adding another unit exceeds the inventory
+                    if (existingProduct.Quantity + 1 > inventory.Units)
+                    {
+                        MessageBox.Show($"Cannot add more units. Available stock: {inventory.Units}.", "Stock Limit Reached", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+
                     // Increment quantity if product already exists
                     existingProduct.Quantity += 1;
 
@@ -92,10 +120,17 @@ namespace POSApp
                     DisplayVatSale();
                     DisplayVatAmount();
 
-                    MessageBox.Show($"Product {productId} already exists. Quantity increased to {existingProduct.Quantity}.");
+                    //  MessageBox.Show($"Product {productId} already exists. Quantity increased to {existingProduct.Quantity}.");
                 }
                 else
                 {
+                    // Check if inventory has at least one unit
+                    if (inventory.Units < 1)
+                    {
+                        MessageBox.Show($"Product ID {productId} is out of stock.", "Out of Stock", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+
                     // Fetch product from the database
                     var product = DatabaseHelper.GetProductById(productId);
 
@@ -128,7 +163,7 @@ namespace POSApp
                         DisplayVatSale();
                         DisplayVatAmount();
 
-                        MessageBox.Show($"Product {productId} added with quantity 1.");
+                        //      MessageBox.Show($"Product {productId} added with quantity 1.");
                     }
                     else
                     {
@@ -271,6 +306,12 @@ namespace POSApp
                 DisplayVatSale();
                 DisplayVatAmount();
             }
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            BrowseProduct browse = new BrowseProduct();
+            browse.ShowDialog();
         }
     }
 }
