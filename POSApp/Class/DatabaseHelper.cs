@@ -96,7 +96,19 @@ namespace POSApp.Class
                             Password VARCHAR(100) NOT NULL,
                             Status INTEGER NOT NULL,
                             DateCreated DATETIME DEFAULT (DATETIME('now'))   
+                        );",
+
+                        // Discount Table
+                        @"
+                        CREATE TABLE IF NOT EXISTS Discounts (
+                            DiscountId INTEGER PRIMARY KEY,
+                            Name VARCHAR(100) NOT NULL,
+                            Percentage INTEGER NOT NULL,
+                            Status  INTEGER NOT NULL,
+                            DateCreated DATETIME DEFAULT (DATETIME('now'))     
                         );"
+
+
                     };
 
                     // Execute each table creation query
@@ -337,6 +349,56 @@ namespace POSApp.Class
 
         }
 
+        public static async Task SyncDiscount(string apiUrl, string authToken)
+        {
+
+            await SyncDataFromApi<Discounts>(
+                apiUrl,
+                authToken,
+                "Discounts",
+                async (discounts, command) =>
+                {
+                    // Clear parameters at the beginning of each operation
+                    command.Parameters.Clear();
+
+                    // Check if the location already exists
+                    string checkQuery = "SELECT COUNT(1) FROM Discounts WHERE DiscountId = @DiscountId";
+                    command.CommandText = checkQuery;
+                    command.Parameters.AddWithValue("@DiscountId", discounts.DiscountId);
+
+                    long count = (long)(await command.ExecuteScalarAsync());
+
+                    if (count == 0)
+                    {
+                        command.CommandText = @"
+                                            INSERT INTO Discounts (DiscountId, Name, Percentage, Status)
+                                            VALUES (@DiscountId, @Name, @Percentage, @Status);";
+                    }
+                    else
+                    {
+                        command.CommandText = @"
+                            UPDATE Discounts
+                            SET Name = @Name,
+                                Percentage = @Percentage,
+                                Status = @Status
+                            WHERE DiscountId = @DiscountId;";
+                    }
+
+                    // Clear parameters before re-adding them for the INSERT or UPDATE query
+                    command.Parameters.Clear();
+
+                    // Add all required parameters
+                    command.Parameters.AddWithValue("@DiscountId", discounts.DiscountId);
+                    command.Parameters.AddWithValue("@Name", discounts.Name);
+                    command.Parameters.AddWithValue("@Percentage", discounts.Percentage);
+                    command.Parameters.AddWithValue("@Status", discounts.Status);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            );
+
+        }
+
         public static async Task SyncDataFromApi<T>(
             string apiUrl,
             string authToken,
@@ -383,7 +445,6 @@ namespace POSApp.Class
                             connection.Close();
                         }
 
-                        MessageBox.Show($"Data for {tableName} synced successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
@@ -490,7 +551,7 @@ namespace POSApp.Class
             return dataTable;
         }
 
-        public static Products GetProductById(int productId)
+        public static Products GetRetailedProductById(int productId)
         {
             try
             {
@@ -519,6 +580,51 @@ namespace POSApp.Class
                                     Name = reader.GetString(2),
                                     Description = reader.IsDBNull(3) ? null : reader.GetString(3),
                                     RetailPrice = reader.GetDecimal(4),
+                                    IsVat = reader.GetInt32(5) // Check if IsVat is 1
+                                };
+                            }
+                        }
+                    }
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching product: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return null;
+        }
+
+        public static Products GetWholesaleProductById(int productId)
+        {
+            try
+            {
+                using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+                {
+                    connection.Open();
+
+                    string query = @"
+                        SELECT Id, Barcode, Name, Description, WholesalePrice, IsVat 
+                        FROM Products 
+                        WHERE Id = @Id;";
+
+                    using (var command = new SQLiteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id", productId);
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                // Map database row to Product object
+                                return new Products
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Barcode = reader.GetString(1),
+                                    Name = reader.GetString(2),
+                                    Description = reader.IsDBNull(3) ? null : reader.GetString(3),
+                                    WholesalePrice = reader.GetDecimal(4),
                                     IsVat = reader.GetInt32(5) // Check if IsVat is 1
                                 };
                             }
@@ -575,6 +681,44 @@ namespace POSApp.Class
             catch (Exception ex)
             {
                 MessageBox.Show($"Error filtering inventory: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return dataTable;
+        }
+
+        public static DataTable GetAllDiscounts()
+        {
+            DataTable dataTable = new DataTable();
+
+            try
+            {
+                using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+                {
+                    connection.Open();
+
+                    string query = @"
+                        SELECT 
+                            DiscountId,
+                            Name, 
+                            Percentage, 
+                            Status, 
+                            DateCreated
+                        FROM Discounts;";
+
+                    using (var command = new SQLiteCommand(query, connection))
+                    {
+                        using (var adapter = new SQLiteDataAdapter(command))
+                        {
+                            adapter.Fill(dataTable);
+                        }
+                    }
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching inventory: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return dataTable;

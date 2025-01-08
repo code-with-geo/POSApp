@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Net;
 
 namespace POSApp
 {
@@ -17,6 +18,11 @@ namespace POSApp
     {
         private List<Cart> displayedProducts = new List<Cart>();
         private List<Inventory> inventoryList = new List<Inventory>();
+        private static readonly string FolderPath = @"C:\POS";
+        private static readonly string DbPath = Path.Combine(FolderPath, "POS.sqlite");
+        private static bool isRetail = true;
+        public string Token { get; private set; }
+
         public Main()
         {
             InitializeComponent();
@@ -35,46 +41,119 @@ namespace POSApp
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Customers customer = new Customers();
+            Customers customer = new Customers(displayedProducts, Token);
             customer.Show();
         }
 
-        private void Main_Load(object sender, EventArgs e)
+        private async void Main_Load(object sender, EventArgs e)
         {
-            // Fetch data and bind to DataGridView
-            //var inventoryData = DatabaseHelper.GetInventory();
-            // dataGridView1.DataSource = inventoryData;
-            inventoryList = DatabaseHelper.LoadInventoryList();
-            lblVatSale.Text = 0.ToString("C2");
-            lblVatAmount.Text = 0.ToString("C2");
-            lblTotalAmount.Text = 0.ToString("C2");
-            lblVatExempt.Text = 0.ToString("C2");
-            lblDiscount.Text = 0.ToString("C2");
+            if (!File.Exists(DbPath))
+            {
+                DatabaseHelper.CreateDatabase();
+                if (IsInternetAvailable())
+                {
+                    if (string.IsNullOrEmpty(Token))
+                    {
+                        var employee = new EmployeeLogin();
+                        var result = employee.ShowDialog();
+
+                        // If the user successfully logged in, set the token
+                        if (result == DialogResult.OK)
+                        {
+
+                            Token = employee.Token;
+                            btnEmployee.Enabled = false;
+                            string apiUrl = "https://localhost:7148/api/products";
+                            string apiUrl2 = "https://localhost:7148/api/locations";
+                            string apiUrl3 = "https://localhost:7148/api/category";
+                            string apiUrl4 = "https://localhost:7148/api/inventory";
+                            string apiUrl5 = "https://localhost:7148/api/discounts";
+                            await DatabaseHelper.SyncProducts(apiUrl, Token);
+                            await DatabaseHelper.SyncLocations(apiUrl2, Token);
+                            await DatabaseHelper.SyncCategory(apiUrl3, Token);
+                            await DatabaseHelper.SyncInventory(apiUrl4, Token);
+                            await DatabaseHelper.SyncDiscount(apiUrl5, Token);
+                            this.Refresh();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (IsInternetAvailable())
+                {
+                    if (string.IsNullOrEmpty(Token))
+                    {
+                        btnEmployee.Enabled = true;
+                    }
+                    else
+                    {
+                        string apiUrl = "https://localhost:7148/api/products";
+                        string apiUrl2 = "https://localhost:7148/api/locations";
+                        string apiUrl3 = "https://localhost:7148/api/category";
+                        string apiUrl4 = "https://localhost:7148/api/inventory";
+                        await DatabaseHelper.SyncProducts(apiUrl, Token);
+                        await DatabaseHelper.SyncLocations(apiUrl2, Token);
+                        await DatabaseHelper.SyncCategory(apiUrl3, Token);
+                        await DatabaseHelper.SyncInventory(apiUrl4, Token);
+                    }
+                }
+                else
+                {
+
+                }
+
+                inventoryList = DatabaseHelper.LoadInventoryList();
+                lblVatSale.Text = 0.ToString("C2");
+                lblVatAmount.Text = 0.ToString("C2");
+                lblTotalAmount.Text = 0.ToString("C2");
+                lblVatExempt.Text = 0.ToString("C2");
+                lblDiscount.Text = 0.ToString("C2");
+                lblTotalAmountHeader.Text = 0.ToString("C2");
+
+            }
 
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private async void button1_Click_1(object sender, EventArgs e)
         {
-            DatabaseHelper.CreateDatabase();
+            string apiUrl = "https://localhost:7148/api/products";
+            string apiUrl2 = "https://localhost:7148/api/locations";
+            string apiUrl3 = "https://localhost:7148/api/category";
+            string apiUrl4 = "https://localhost:7148/api/inventory";
+            await DatabaseHelper.SyncProducts(apiUrl, Token);
+            await DatabaseHelper.SyncLocations(apiUrl2, Token);
+            await DatabaseHelper.SyncCategory(apiUrl3, Token);
+            await DatabaseHelper.SyncInventory(apiUrl4, Token);
         }
 
         private async void button5_Click(object sender, EventArgs e)
         {
             displayedProducts.Clear();
+            dataGridView1.DataSource = null;
+            dataGridView1.ColumnHeadersVisible = false;
             RefreshDataGridView();
             DisplayTotalAmount();
             DisplayVatSale();
             DisplayVatAmount();
-            /* string apiUrl = "https://localhost:7148/api/products";
-             string apiUrl2 = "https://localhost:7148/api/locations";
-             string apiUrl3 = "https://localhost:7148/api/category";
-             string apiUrl4 = "https://localhost:7148/api/inventory";
-             string authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6ImRjOGVjOWIzLTg1MzMtNGI4MC1iNzQ0LWJjODgwZGUxY2Q5NyIsImV4cCI6MTczNjI1MjU2OSwiaXNzIjoiSnd0QXV0aEFwaSIsImF1ZCI6Ikp3dEF1dGhBcGlVc2VycyJ9.UYBAsidHf4Wm9tHkC3xDp5Rf-zGoKhZGGnNexpN6vKw"; // Replace with your token
+            lblDiscount.Text = 0.ToString("C2");
+            inventoryList = DatabaseHelper.LoadInventoryList();
+        }
 
-             await DatabaseHelper.SyncProducts(apiUrl, authToken);
-             await DatabaseHelper.SyncLocations(apiUrl2, authToken);
-             await DatabaseHelper.SyncCategory(apiUrl3, authToken);
-             await DatabaseHelper.SyncInventory(apiUrl4, authToken);*/
+        private bool IsInternetAvailable()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                using (client.OpenRead("http://www.google.com"))
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private void AddProductToCart()
@@ -106,7 +185,7 @@ namespace POSApp
                     existingProduct.Quantity += 1;
 
                     // Update SubTotal
-                    existingProduct.SubTotal = existingProduct.Quantity * existingProduct.RetailPrice;
+                    existingProduct.SubTotal = existingProduct.Quantity * existingProduct.Price;
 
                     // If product has VAT, update the VAT amount
                     if (existingProduct.IsVat == 1)
@@ -132,7 +211,7 @@ namespace POSApp
                     }
 
                     // Fetch product from the database
-                    var product = DatabaseHelper.GetProductById(productId);
+                    var product = isRetail ? DatabaseHelper.GetRetailedProductById(productId) : DatabaseHelper.GetWholesaleProductById(productId);
 
                     if (product != null)
                     {
@@ -140,7 +219,7 @@ namespace POSApp
                         decimal vatAmount = 0;
                         if (product.IsVat == 1)
                         {
-                            vatAmount = product.RetailPrice * 0.12m; // 12% VAT
+                            vatAmount = isRetail ? product.RetailPrice * 0.12m : product.WholesalePrice * 0.12m; // 12% VAT
                         }
 
                         // Add the product to the cart
@@ -150,9 +229,9 @@ namespace POSApp
                             Barcode = product.Barcode,
                             Name = product.Name,
                             Description = product.Description,
-                            RetailPrice = product.RetailPrice,
+                            Price = isRetail ? product.RetailPrice : product.WholesalePrice,
                             Quantity = 1, // Initial quantity is 1
-                            SubTotal = product.RetailPrice, // SubTotal = RetailPrice * Quantity
+                            SubTotal = isRetail ? product.RetailPrice : product.WholesalePrice, // SubTotal = RetailPrice * Quantity
                             VatAmount = vatAmount, // Add VAT amount to the cart
                             IsVat = product.IsVat
                         });
@@ -182,6 +261,7 @@ namespace POSApp
 
         private void RefreshDataGridView()
         {
+            dataGridView1.ColumnHeadersVisible = true;
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.Columns.Clear();
 
@@ -195,8 +275,8 @@ namespace POSApp
             dataGridView1.Columns.Add("Description", "Description");
             dataGridView1.Columns["Description"].DataPropertyName = "Description";
 
-            dataGridView1.Columns.Add("RetailPrice", "Retail Price");
-            dataGridView1.Columns["RetailPrice"].DataPropertyName = "RetailPrice";
+            dataGridView1.Columns.Add("Price", "Price");
+            dataGridView1.Columns["Price"].DataPropertyName = "Price";
 
             dataGridView1.Columns.Add("Quantity", "Quantity");
             dataGridView1.Columns["Quantity"].DataPropertyName = "Quantity";
@@ -215,16 +295,24 @@ namespace POSApp
             removeButtonColumn.UseColumnTextForButtonValue = true;
             dataGridView1.Columns.Add(removeButtonColumn);
 
+            // Add Discount column to DataGridView
+            DataGridViewButtonColumn discountColumn = new DataGridViewButtonColumn();
+            discountColumn.Name = "Discount";
+            discountColumn.HeaderText = "Apply Discount";
+            discountColumn.Text = "Apply";
+            discountColumn.UseColumnTextForButtonValue = true;
+            dataGridView1.Columns.Add(discountColumn);
+
             // Bind the displayedProducts list to the DataGridView
             dataGridView1.DataSource = null;  // Clear previous binding
             dataGridView1.DataSource = displayedProducts;
 
             // Format columns for currency
-            dataGridView1.Columns["RetailPrice"].DefaultCellStyle.Format = "C2";
+            dataGridView1.Columns["Price"].DefaultCellStyle.Format = "C2";
             dataGridView1.Columns["SubTotal"].DefaultCellStyle.Format = "C2";
             dataGridView1.Columns["VatAmount"].DefaultCellStyle.Format = "C2";
             // Align numeric columns
-            dataGridView1.Columns["RetailPrice"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.Columns["Price"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridView1.Columns["SubTotal"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridView1.Columns["VatAmount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridView1.Columns["Quantity"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -240,6 +328,7 @@ namespace POSApp
 
             // Update the label (assuming you have a label named lblTotalSubTotal)
             lblTotalAmount.Text = totalSubTotal.ToString("C2"); // "C2" formats as currency with 2 decimals
+            lblTotalAmountHeader.Text = totalSubTotal.ToString("C2"); // "C2" formats as currency with 2 decimals
         }
 
         private void DisplayVatSale()
@@ -260,9 +349,28 @@ namespace POSApp
             lblVatExempt.Text = VatExempt.ToString("C2"); // Format as currency
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private async void button6_Click(object sender, EventArgs e)
         {
-            // Get the productId from the TextBox
+            //Customers customer = new Customers(displayedProducts, Token);
+            //customer.ShowDialog();
+            var customer = new Customers(displayedProducts, Token);
+            var result = customer.ShowDialog();
+
+            // If the user successfully logged in, set the token
+            if (result == DialogResult.OK)
+            {
+                displayedProducts.Clear();
+                dataGridView1.DataSource = null;
+                dataGridView1.ColumnHeadersVisible = false;
+                RefreshDataGridView();
+                DisplayTotalAmount();
+                DisplayVatSale();
+                DisplayVatAmount();
+                lblDiscount.Text = 0.ToString("C2");
+                string apiUrl4 = "https://localhost:7148/api/inventory";
+                await DatabaseHelper.SyncInventory(apiUrl4, Token);
+                inventoryList = DatabaseHelper.LoadInventoryList();
+            }
 
         }
 
@@ -286,7 +394,7 @@ namespace POSApp
                 if (productToRemove.Quantity > 1)
                 {
                     productToRemove.Quantity -= 1;
-                    productToRemove.SubTotal = productToRemove.Quantity * productToRemove.RetailPrice;
+                    productToRemove.SubTotal = productToRemove.Quantity * productToRemove.Price;
 
                     // Recalculate VAT if applicable
                     if (productToRemove.IsVat == 1)
@@ -298,6 +406,51 @@ namespace POSApp
                 {
                     // If quantity is 1, remove the product from the cart
                     displayedProducts.RemoveAt(e.RowIndex);
+                    if (displayedProducts.Count == 0)
+                    {
+                        dataGridView1.ColumnHeadersVisible = false;
+                        lblDiscount.Text = 0.ToString("C2");
+                    }
+                    else
+                    {
+                        dataGridView1.ColumnHeadersVisible = true;
+                    }
+                }
+
+                // Refresh DataGridView after updating
+                RefreshDataGridView();
+                DisplayTotalAmount();
+                DisplayVatSale();
+                DisplayVatAmount();
+            }
+            else if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView1.Columns["Discount"].Index)
+            {
+                var productToDiscount = displayedProducts[e.RowIndex];
+
+                // Fetch discount from the DiscountSelectionForm
+                var selectedDiscount = GetSelectedDiscount();
+
+                if (selectedDiscount != null)
+                {
+                    // Calculate discount amount
+                    decimal discountAmount = (selectedDiscount.Percentage / 100m) * productToDiscount.Price;
+                    decimal discountedPrice = productToDiscount.Price - discountAmount;
+
+                    // Apply the discounted price
+                    productToDiscount.Price = discountedPrice;
+                    productToDiscount.SubTotal = productToDiscount.Quantity * discountedPrice;
+
+                    // Recalculate VAT if applicable
+                    if (productToDiscount.IsVat == 1)
+                    {
+                        productToDiscount.VatAmount = Math.Round(productToDiscount.SubTotal * 0.12m, 2, MidpointRounding.AwayFromZero);  // 12% VAT
+                    }
+
+                    lblDiscount.Text = discountAmount.ToString("C2"); // Display the discount amount
+                }
+                else
+                {
+                    MessageBox.Show("No discount selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 // Refresh DataGridView after updating
@@ -308,10 +461,78 @@ namespace POSApp
             }
         }
 
+        private Discounts GetSelectedDiscount()
+        {
+            // Fetch the list of discounts from the database using the existing method
+            DataTable discountDataTable = DatabaseHelper.GetAllDiscounts();
+
+            // Check if any discounts were retrieved
+            if (discountDataTable == null || discountDataTable.Rows.Count == 0)
+            {
+                MessageBox.Show("No discounts available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return null;
+            }
+
+            // Convert DataTable to a list of Discounts
+            List<Discounts> discounts = new List<Discounts>();
+            foreach (DataRow row in discountDataTable.Rows)
+            {
+                discounts.Add(new Discounts
+                {
+                    DiscountId = Convert.ToInt32(row["DiscountId"]),
+                    Name = row["Name"].ToString(),
+                    Percentage = Convert.ToInt32(row["Percentage"]),
+                    Status = Convert.ToInt32(row["Status"]),
+                    DateCreated = row["DateCreated"] as DateTime? // Handle possible nulls
+                });
+            }
+
+            // Create the DiscountSelectionForm and pass the discounts list
+            using (var discountForm = new DiscountList(discounts))
+            {
+                var result = discountForm.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    return discountForm.SelectedDiscount;
+                }
+            }
+
+            // If the user cancels or no discount selected, return null
+            return null;
+        }
+
         private void button2_Click_1(object sender, EventArgs e)
         {
             BrowseProduct browse = new BrowseProduct();
             browse.ShowDialog();
+        }
+
+        private void cbTransType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbTransType.SelectedIndex == 0)
+            {
+                isRetail = true;
+            }
+            else
+            {
+                isRetail = false;
+            }
+        }
+
+        private void btnEmployee_Click(object sender, EventArgs e)
+        {
+            var employee = new EmployeeLogin();
+            var result = employee.ShowDialog();
+
+            // If the user successfully logged in, set the token
+            if (result == DialogResult.OK)
+            {
+
+                Token = employee.Token;
+                btnEmployee.Enabled = false;
+                this.Refresh();
+            }
         }
     }
 }

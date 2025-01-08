@@ -12,10 +12,11 @@ namespace POSApp.Class
         public string Barcode { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public decimal RetailPrice { get; set; }
+        public decimal Price { get; set; }
         public int Quantity { get; set; }
         public decimal VatAmount { get; set; }  // Add VatAmount property
         public decimal SubTotal { get; set; }
+        public int DiscountId { get; set; }
         public int IsVat { get; set; }
     }
 }

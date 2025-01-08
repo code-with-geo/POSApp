@@ -40,10 +40,10 @@
             btnLogin.Cursor = Cursors.Hand;
             btnLogin.FlatStyle = FlatStyle.Flat;
             btnLogin.ForeColor = Color.White;
-            btnLogin.Location = new Point(197, 98);
-            btnLogin.Margin = new Padding(4);
+            btnLogin.Location = new Point(156, 67);
+            btnLogin.Margin = new Padding(3, 4, 3, 4);
             btnLogin.Name = "btnLogin";
-            btnLogin.Size = new Size(176, 33);
+            btnLogin.Size = new Size(141, 29);
             btnLogin.TabIndex = 0;
             btnLogin.Text = "Login";
             btnLogin.UseVisualStyleBackColor = false;
@@ -55,47 +55,49 @@
             btnExit.Cursor = Cursors.Hand;
             btnExit.FlatStyle = FlatStyle.Flat;
             btnExit.ForeColor = Color.White;
-            btnExit.Location = new Point(13, 98);
-            btnExit.Margin = new Padding(4);
+            btnExit.Location = new Point(8, 67);
+            btnExit.Margin = new Padding(3, 4, 3, 4);
             btnExit.Name = "btnExit";
-            btnExit.Size = new Size(176, 33);
+            btnExit.Size = new Size(141, 29);
             btnExit.TabIndex = 1;
             btnExit.Text = "Exit";
             btnExit.UseVisualStyleBackColor = false;
             // 
             // txtLocationId
             // 
-            txtLocationId.Location = new Point(12, 33);
+            txtLocationId.Location = new Point(8, 9);
+            txtLocationId.Margin = new Padding(2, 3, 2, 3);
             txtLocationId.Name = "txtLocationId";
             txtLocationId.PlaceholderText = "Location Id";
-            txtLocationId.Size = new Size(361, 26);
+            txtLocationId.Size = new Size(290, 22);
             txtLocationId.TabIndex = 2;
             txtLocationId.TextAlign = HorizontalAlignment.Center;
             // 
             // txtPassword
             // 
-            txtPassword.Location = new Point(12, 65);
+            txtPassword.Location = new Point(8, 38);
+            txtPassword.Margin = new Padding(2, 3, 2, 3);
             txtPassword.Name = "txtPassword";
             txtPassword.PasswordChar = '*';
             txtPassword.PlaceholderText = "Password";
-            txtPassword.Size = new Size(361, 26);
+            txtPassword.Size = new Size(290, 22);
             txtPassword.TabIndex = 4;
             txtPassword.TextAlign = HorizontalAlignment.Center;
             // 
             // Login
             // 
-            AutoScaleDimensions = new SizeF(10F, 18F);
+            AutoScaleDimensions = new SizeF(8F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(386, 155);
+            ClientSize = new Size(309, 109);
             ControlBox = false;
             Controls.Add(txtPassword);
             Controls.Add(txtLocationId);
             Controls.Add(btnExit);
             Controls.Add(btnLogin);
-            Font = new Font("Courier New", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            Font = new Font("Courier New", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             FormBorderStyle = FormBorderStyle.None;
-            Margin = new Padding(4);
+            Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "Login";

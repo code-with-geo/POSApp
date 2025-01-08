@@ -41,7 +41,7 @@
             button10 = new Button();
             button11 = new Button();
             button12 = new Button();
-            label6 = new Label();
+            lblAmountDue = new Label();
             label2 = new Label();
             label1 = new Label();
             txtLocationId = new TextBox();
@@ -132,6 +132,7 @@
             button4.TabIndex = 21;
             button4.Text = "+100";
             button4.UseVisualStyleBackColor = false;
+            button4.Click += button4_Click;
             // 
             // button6
             // 
@@ -202,6 +203,7 @@
             button10.TabIndex = 26;
             button10.Text = "+50";
             button10.UseVisualStyleBackColor = false;
+            button10.Click += button10_Click;
             // 
             // button11
             // 
@@ -230,15 +232,16 @@
             button12.TabIndex = 28;
             button12.Text = "+.5";
             button12.UseVisualStyleBackColor = false;
+            button12.Click += button12_Click;
             // 
-            // label6
+            // lblAmountDue
             // 
-            label6.AutoSize = true;
-            label6.Location = new Point(494, 294);
-            label6.Name = "label6";
-            label6.Size = new Size(48, 18);
-            label6.TabIndex = 31;
-            label6.Text = "0.00";
+            lblAmountDue.AutoSize = true;
+            lblAmountDue.Location = new Point(470, 294);
+            lblAmountDue.Name = "lblAmountDue";
+            lblAmountDue.Size = new Size(48, 18);
+            lblAmountDue.TabIndex = 31;
+            lblAmountDue.Text = "0.00";
             // 
             // label2
             // 
@@ -273,7 +276,7 @@
             BackColor = Color.White;
             ClientSize = new Size(553, 504);
             Controls.Add(txtLocationId);
-            Controls.Add(label6);
+            Controls.Add(lblAmountDue);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(button12);
@@ -295,6 +298,7 @@
             Name = "Tenders";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Tenders";
+            Load += Tenders_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -314,7 +318,7 @@
         private Button button10;
         private Button button11;
         private Button button12;
-        private Label label6;
+        private Label lblAmountDue;
         private Label label2;
         private Label label1;
         private TextBox txtLocationId;

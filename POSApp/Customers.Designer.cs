@@ -28,30 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button5 = new Button();
+            btnSkip = new Button();
             btnExit = new Button();
-            txtLocationId = new TextBox();
-            textBox1 = new TextBox();
-            textBox2 = new TextBox();
-            textBox3 = new TextBox();
+            txtFirstName = new TextBox();
+            txtLastName = new TextBox();
+            txtContactNo = new TextBox();
+            txtEmail = new TextBox();
             label1 = new Label();
-            button2 = new Button();
+            btnSearch = new Button();
+            btnAddNew = new Button();
             SuspendLayout();
             // 
-            // button5
+            // btnSkip
             // 
-            button5.BackColor = Color.Black;
-            button5.Cursor = Cursors.Hand;
-            button5.FlatStyle = FlatStyle.Flat;
-            button5.ForeColor = Color.White;
-            button5.Location = new Point(371, 222);
-            button5.Margin = new Padding(4);
-            button5.Name = "button5";
-            button5.Size = new Size(171, 80);
-            button5.TabIndex = 17;
-            button5.Text = "SKIP";
-            button5.UseVisualStyleBackColor = false;
-            button5.Click += button5_Click;
+            btnSkip.BackColor = Color.Black;
+            btnSkip.Cursor = Cursors.Hand;
+            btnSkip.FlatStyle = FlatStyle.Flat;
+            btnSkip.ForeColor = Color.White;
+            btnSkip.Location = new Point(404, 178);
+            btnSkip.Margin = new Padding(3, 4, 3, 4);
+            btnSkip.Name = "btnSkip";
+            btnSkip.Size = new Size(125, 46);
+            btnSkip.TabIndex = 17;
+            btnSkip.Text = "SKIP";
+            btnSkip.UseVisualStyleBackColor = false;
+            btnSkip.Click += button5_Click;
             // 
             // btnExit
             // 
@@ -59,91 +60,113 @@
             btnExit.Cursor = Cursors.Hand;
             btnExit.FlatStyle = FlatStyle.Flat;
             btnExit.ForeColor = Color.White;
-            btnExit.Location = new Point(13, 222);
-            btnExit.Margin = new Padding(4);
+            btnExit.Location = new Point(11, 178);
+            btnExit.Margin = new Padding(3, 4, 3, 4);
             btnExit.Name = "btnExit";
-            btnExit.Size = new Size(171, 80);
+            btnExit.Size = new Size(125, 46);
             btnExit.TabIndex = 16;
-            btnExit.Text = "NEW CUSTOMER";
+            btnExit.Text = "Cancel";
             btnExit.UseVisualStyleBackColor = false;
+            btnExit.Click += btnExit_Click;
             // 
-            // txtLocationId
+            // txtFirstName
             // 
-            txtLocationId.Location = new Point(63, 85);
-            txtLocationId.Name = "txtLocationId";
-            txtLocationId.PlaceholderText = "First Name";
-            txtLocationId.Size = new Size(211, 26);
-            txtLocationId.TabIndex = 18;
-            txtLocationId.TextAlign = HorizontalAlignment.Center;
+            txtFirstName.Location = new Point(11, 70);
+            txtFirstName.Margin = new Padding(2, 3, 2, 3);
+            txtFirstName.Name = "txtFirstName";
+            txtFirstName.PlaceholderText = "First Name";
+            txtFirstName.Size = new Size(253, 22);
+            txtFirstName.TabIndex = 18;
+            txtFirstName.TextAlign = HorizontalAlignment.Center;
             // 
-            // textBox1
+            // txtLastName
             // 
-            textBox1.Location = new Point(290, 85);
-            textBox1.Name = "textBox1";
-            textBox1.PlaceholderText = "Last Name";
-            textBox1.Size = new Size(211, 26);
-            textBox1.TabIndex = 19;
-            textBox1.TextAlign = HorizontalAlignment.Center;
+            txtLastName.Location = new Point(276, 70);
+            txtLastName.Margin = new Padding(2, 3, 2, 3);
+            txtLastName.Name = "txtLastName";
+            txtLastName.PlaceholderText = "Last Name";
+            txtLastName.Size = new Size(253, 22);
+            txtLastName.TabIndex = 19;
+            txtLastName.TextAlign = HorizontalAlignment.Center;
             // 
-            // textBox2
+            // txtContactNo
             // 
-            textBox2.Location = new Point(63, 129);
-            textBox2.Name = "textBox2";
-            textBox2.PlaceholderText = "Contact No.";
-            textBox2.Size = new Size(438, 26);
-            textBox2.TabIndex = 20;
-            textBox2.TextAlign = HorizontalAlignment.Center;
+            txtContactNo.Location = new Point(11, 107);
+            txtContactNo.Margin = new Padding(2, 3, 2, 3);
+            txtContactNo.Name = "txtContactNo";
+            txtContactNo.PlaceholderText = "Contact No.";
+            txtContactNo.Size = new Size(518, 22);
+            txtContactNo.TabIndex = 20;
+            txtContactNo.TextAlign = HorizontalAlignment.Center;
             // 
-            // textBox3
+            // txtEmail
             // 
-            textBox3.Location = new Point(63, 176);
-            textBox3.Name = "textBox3";
-            textBox3.PlaceholderText = "Email Address";
-            textBox3.Size = new Size(438, 26);
-            textBox3.TabIndex = 21;
-            textBox3.TextAlign = HorizontalAlignment.Center;
+            txtEmail.Location = new Point(11, 144);
+            txtEmail.Margin = new Padding(2, 3, 2, 3);
+            txtEmail.Name = "txtEmail";
+            txtEmail.PlaceholderText = "Email";
+            txtEmail.Size = new Size(518, 22);
+            txtEmail.TabIndex = 21;
+            txtEmail.TextAlign = HorizontalAlignment.Center;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Courier New", 18F, FontStyle.Bold, GraphicsUnit.Point);
-            label1.Location = new Point(114, 32);
+            label1.Location = new Point(102, 22);
+            label1.Margin = new Padding(2, 0, 2, 0);
             label1.Name = "label1";
             label1.Size = new Size(334, 27);
             label1.TabIndex = 22;
             label1.Text = "ATTACH CUSTOMER ON SALE";
             // 
-            // button2
+            // btnSearch
             // 
-            button2.BackColor = Color.Black;
-            button2.Cursor = Cursors.Hand;
-            button2.FlatStyle = FlatStyle.Flat;
-            button2.ForeColor = Color.White;
-            button2.Location = new Point(192, 222);
-            button2.Margin = new Padding(4);
-            button2.Name = "button2";
-            button2.Size = new Size(171, 80);
-            button2.TabIndex = 24;
-            button2.Text = "SEARCH";
-            button2.UseVisualStyleBackColor = false;
+            btnSearch.BackColor = Color.Black;
+            btnSearch.Cursor = Cursors.Hand;
+            btnSearch.FlatStyle = FlatStyle.Flat;
+            btnSearch.ForeColor = Color.White;
+            btnSearch.Location = new Point(273, 178);
+            btnSearch.Margin = new Padding(3, 4, 3, 4);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(125, 46);
+            btnSearch.TabIndex = 24;
+            btnSearch.Text = "SEARCH";
+            btnSearch.UseVisualStyleBackColor = false;
+            // 
+            // btnAddNew
+            // 
+            btnAddNew.BackColor = Color.Black;
+            btnAddNew.Cursor = Cursors.Hand;
+            btnAddNew.FlatStyle = FlatStyle.Flat;
+            btnAddNew.ForeColor = Color.White;
+            btnAddNew.Location = new Point(142, 178);
+            btnAddNew.Margin = new Padding(3, 4, 3, 4);
+            btnAddNew.Name = "btnAddNew";
+            btnAddNew.Size = new Size(125, 46);
+            btnAddNew.TabIndex = 25;
+            btnAddNew.Text = "NEW CUSTOMER";
+            btnAddNew.UseVisualStyleBackColor = false;
+            btnAddNew.Click += btnAddNew_Click;
             // 
             // Customers
             // 
-            AutoScaleDimensions = new SizeF(10F, 18F);
+            AutoScaleDimensions = new SizeF(8F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(554, 327);
-            Controls.Add(button2);
+            ClientSize = new Size(537, 234);
+            Controls.Add(btnAddNew);
+            Controls.Add(btnSearch);
             Controls.Add(label1);
-            Controls.Add(textBox3);
-            Controls.Add(textBox2);
-            Controls.Add(textBox1);
-            Controls.Add(txtLocationId);
-            Controls.Add(button5);
+            Controls.Add(txtEmail);
+            Controls.Add(txtContactNo);
+            Controls.Add(txtLastName);
+            Controls.Add(txtFirstName);
+            Controls.Add(btnSkip);
             Controls.Add(btnExit);
-            Font = new Font("Courier New", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            Font = new Font("Courier New", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             FormBorderStyle = FormBorderStyle.None;
-            Margin = new Padding(4);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "Customers";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Customers";
@@ -153,13 +176,14 @@
 
         #endregion
 
-        private Button button5;
+        private Button btnSkip;
         private Button btnExit;
-        private TextBox txtLocationId;
-        private TextBox textBox1;
-        private TextBox textBox2;
-        private TextBox textBox3;
+        private TextBox txtFirstName;
+        private TextBox txtLastName;
+        private TextBox txtContactNo;
+        private TextBox txtEmail;
         private Label label1;
-        private Button button2;
+        private Button btnSearch;
+        private Button btnAddNew;
     }
 }
