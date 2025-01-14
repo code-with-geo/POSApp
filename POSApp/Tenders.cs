@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace POSApp
 {
@@ -17,14 +18,18 @@ namespace POSApp
     {
         private List<Cart> _cart;
         private string Token;
-        private int customerId;
-        public Tenders(List<Cart> cart, string token, int customerId)
+        private int CustomerId;
+        private int UserId;
+        private string AccountId;
+        private decimal TotalAmount;
+        public Tenders(List<Cart> cart, string token, int customerId, int userId, string accountId)
         {
             InitializeComponent();
             _cart = cart;
             Token = token;
-            this.customerId = customerId;
-
+            CustomerId = customerId;
+            UserId = userId;
+            AccountId = accountId;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -34,47 +39,9 @@ namespace POSApp
 
         private void DisplayTotalAmount()
         {
-            // Calculate the total sum of SubTotal from displayedProducts list
             decimal totalSubTotal = _cart.Sum(p => p.SubTotal);
-
-            // Update the label (assuming you have a label named lblTotalSubTotal)
-            lblAmountDue.Text = totalSubTotal.ToString("C2"); // "C2" formats as currency with 2 decimals
-        }
-
-        private async void button5_Click(object sender, EventArgs e)
-        {
-            // Example: Call AddOrderAsync with dummy data or actual inputs from your form
-            int locationId = 1; // Replace with the actual locationId
-            int userId = 1;     // Replace with the actual userId
-            int discountId = 1;
-            // Call the AddOrderAsync method
-            bool isSuccess = await AddOrderAsync(locationId, userId, discountId, customerId);
-
-            if (isSuccess)
-            {
-                // Redirect to the main form if the call is successful
-                MessageBox.Show("Redirecting to the main form...", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // Bring the main form to the front if it already exists
-                foreach (Form openForm in Application.OpenForms)
-                {
-                    if (openForm is Main mainForm)
-                    {
-                        mainForm.Show();      // Ensure it's visible
-                        mainForm.BringToFront(); // Bring it to the front
-                        this.Refresh();
-                        this.DialogResult = DialogResult.OK; // Close with success
-                        this.Close();         // Close the current form
-                        return;
-                    }
-                }
-                this.DialogResult = DialogResult.OK; // Close with success
-
-                // If the main form is not open, create a new instance
-                Main newMainForm = new Main(); // Replace with the actual name of your main form class
-                newMainForm.ShowDialog(); // Use ShowDialog if that's how you opened it initially
-                this.Close();             // Close the current form
-            }
+            lblAmountDue.Text = totalSubTotal.ToString("C2");
+            TotalAmount = totalSubTotal;
         }
 
         private async Task<bool> AddOrderAsync(int locationId, int userId, int discountId, int customerId)
@@ -138,42 +105,56 @@ namespace POSApp
         private void Tenders_Load(object sender, EventArgs e)
         {
             DisplayTotalAmount();
-            txtLocationId.Text = "0.00";
         }
 
-        private void button12_Click(object sender, EventArgs e)
+        private async void btnRemoveAll_Click(object sender, EventArgs e)
         {
-            AddToTextboxValue(100m);
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        // Method to add the specified amount to the TextBox value
-        private void AddToTextboxValue(decimal amount)
-        {
-            decimal currentValue = 0.00m;
-
-            // Check if the value in the TextBox is a valid decimal
-            if (!string.IsNullOrWhiteSpace(txtLocationId.Text) && decimal.TryParse(txtLocationId.Text, out currentValue))
+            int locationId = 1;
+            int userId = UserId;
+            int discountId = 1;
+            bool isSuccess = await AddOrderAsync(locationId, userId, discountId, CustomerId);
+            int points = Convert.ToInt32(TotalAmount / 200);
+            Random random = new Random();
+            int invoiceNo = random.Next(1000000000, int.MaxValue);
+            string accountId = AccountId == null ? "N/A" : AccountId;
+            decimal totalAmount = TotalAmount;
+            decimal receivedAmount = Convert.ToDecimal(txtReceiveAmount.Text);
+            int paymentMethod = 0;
+            if (isSuccess)
             {
-                // Add the specified amount to the current value
-                currentValue += amount;
-
-                // Update the TextBox with the new value formatted as currency (C2)
-                txtLocationId.Text = currentValue.ToString();  // "C2" formats it as currency with two decimals
-            }
-            else
-            {
-                // Provide a more specific error message
-                MessageBox.Show("Please enter a valid number in the TextBox.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                SaveToLocal(invoiceNo,_cart, accountId,points,userId,locationId, totalAmount, receivedAmount, paymentMethod);
+                foreach (Form openForm in Application.OpenForms)
+                {
+                    if (openForm is POS pos)
+                    {
+                        pos.Show();
+                        pos.BringToFront();
+                        this.Refresh();
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                        return;
+                    }
+                }
+                this.DialogResult = DialogResult.OK;
+                POS newPOSForm = new POS();
+                newPOSForm.ShowDialog();
+                this.Close();
             }
         }
-        private void button10_Click(object sender, EventArgs e)
+
+        private void SaveToLocal(int invoiceNo, List<Cart> cart, string accountId, int points, int userId, int locationId, decimal totalAmount,decimal receivedAmount, int paymentMethod)
         {
-            AddToTextboxValue(50m);  // Use decimal type (m suffix)
+            if (accountId != "N/A")
+            {
+                DatabaseHelper.UpdateCustomerTransaction(accountId, points);
+            }
+            DatabaseHelper.SaveOrderProducts(cart, invoiceNo);
+            DatabaseHelper.SaveOrder(invoiceNo, userId, locationId, accountId, totalAmount, receivedAmount, paymentMethod);
+        }
+
+        private void guna2Button1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(AccountId.ToString());
         }
     }
 }

@@ -465,7 +465,7 @@
             button11.Font = new Font("Courier New", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
             button11.ForeColor = Color.Black;
             button11.Image = (Image)resources.GetObject("button11.Image");
-            button11.Location = new Point(886, 69);
+            button11.Location = new Point(885, 70);
             button11.Margin = new Padding(3, 4, 3, 4);
             button11.Name = "button11";
             button11.Size = new Size(161, 137);

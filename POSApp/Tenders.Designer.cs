@@ -28,270 +28,194 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button5 = new Button();
-            btnExit = new Button();
-            button1 = new Button();
-            button2 = new Button();
-            button3 = new Button();
-            button4 = new Button();
-            button6 = new Button();
-            button7 = new Button();
-            button8 = new Button();
-            button9 = new Button();
-            button10 = new Button();
-            button11 = new Button();
-            button12 = new Button();
-            lblAmountDue = new Label();
-            label2 = new Label();
-            label1 = new Label();
-            txtLocationId = new TextBox();
+            components = new System.ComponentModel.Container();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
+            guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
+            lblTitle = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
+            btnRemoveAll = new Guna.UI2.WinForms.Guna2Button();
+            btnCancel = new Guna.UI2.WinForms.Guna2Button();
+            txtReceiveAmount = new Guna.UI2.WinForms.Guna2TextBox();
+            guna2HtmlLabel10 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            lblAmountDue = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            guna2HtmlLabel1 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            guna2Panel2.SuspendLayout();
+            guna2Panel1.SuspendLayout();
             SuspendLayout();
             // 
-            // button5
+            // guna2BorderlessForm1
             // 
-            button5.BackColor = Color.Black;
-            button5.Cursor = Cursors.Hand;
-            button5.FlatStyle = FlatStyle.Flat;
-            button5.ForeColor = Color.White;
-            button5.Location = new Point(371, 411);
-            button5.Margin = new Padding(4);
-            button5.Name = "button5";
-            button5.Size = new Size(171, 80);
-            button5.TabIndex = 17;
-            button5.Text = "PAY";
-            button5.UseVisualStyleBackColor = false;
-            button5.Click += button5_Click;
+            guna2BorderlessForm1.ContainerControl = this;
+            guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
+            guna2BorderlessForm1.TransparentWhileDrag = true;
             // 
-            // btnExit
+            // guna2Panel2
             // 
-            btnExit.BackColor = Color.Black;
-            btnExit.Cursor = Cursors.Hand;
-            btnExit.FlatStyle = FlatStyle.Flat;
-            btnExit.ForeColor = Color.White;
-            btnExit.Location = new Point(192, 411);
-            btnExit.Margin = new Padding(4);
-            btnExit.Name = "btnExit";
-            btnExit.Size = new Size(171, 80);
-            btnExit.TabIndex = 16;
-            btnExit.Text = "CLEAR AMOUNT";
-            btnExit.UseVisualStyleBackColor = false;
+            guna2Panel2.BackColor = Color.MidnightBlue;
+            guna2Panel2.Controls.Add(lblTitle);
+            guna2Panel2.CustomizableEdges = customizableEdges1;
+            guna2Panel2.Location = new Point(-2, -4);
+            guna2Panel2.Name = "guna2Panel2";
+            guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            guna2Panel2.Size = new Size(560, 74);
+            guna2Panel2.TabIndex = 33;
             // 
-            // button1
+            // lblTitle
             // 
-            button1.BackColor = Color.Black;
-            button1.Cursor = Cursors.Hand;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.ForeColor = Color.White;
-            button1.Location = new Point(13, 410);
-            button1.Margin = new Padding(4);
-            button1.Name = "button1";
-            button1.Size = new Size(171, 80);
-            button1.TabIndex = 18;
-            button1.Text = "CANCEL";
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += button1_Click;
+            lblTitle.BackColor = Color.Transparent;
+            lblTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            lblTitle.ForeColor = Color.White;
+            lblTitle.Location = new Point(19, 22);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(109, 34);
+            lblTitle.TabIndex = 12;
+            lblTitle.Text = "TENDERS";
+            lblTitle.TextAlignment = ContentAlignment.MiddleLeft;
             // 
-            // button2
+            // guna2Panel1
             // 
-            button2.BackColor = Color.Black;
-            button2.Cursor = Cursors.Hand;
-            button2.FlatStyle = FlatStyle.Flat;
-            button2.ForeColor = Color.White;
-            button2.Location = new Point(192, 13);
-            button2.Margin = new Padding(4);
-            button2.Name = "button2";
-            button2.Size = new Size(171, 80);
-            button2.TabIndex = 19;
-            button2.Text = "+.25";
-            button2.UseVisualStyleBackColor = false;
+            guna2Panel1.BackColor = Color.MidnightBlue;
+            guna2Panel1.Controls.Add(guna2Button1);
+            guna2Panel1.Controls.Add(btnRemoveAll);
+            guna2Panel1.Controls.Add(btnCancel);
+            guna2Panel1.CustomizableEdges = customizableEdges11;
+            guna2Panel1.Location = new Point(-1, 216);
+            guna2Panel1.Name = "guna2Panel1";
+            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            guna2Panel1.Size = new Size(568, 91);
+            guna2Panel1.TabIndex = 34;
             // 
-            // button3
+            // guna2Button1
             // 
-            button3.BackColor = Color.Black;
-            button3.Cursor = Cursors.Hand;
-            button3.FlatStyle = FlatStyle.Flat;
-            button3.ForeColor = Color.White;
-            button3.Location = new Point(192, 101);
-            button3.Margin = new Padding(4);
-            button3.Name = "button3";
-            button3.Size = new Size(171, 80);
-            button3.TabIndex = 20;
-            button3.Text = "+10";
-            button3.UseVisualStyleBackColor = false;
+            guna2Button1.CustomizableEdges = customizableEdges5;
+            guna2Button1.DisabledState.BorderColor = Color.DarkGray;
+            guna2Button1.DisabledState.CustomBorderColor = Color.DarkGray;
+            guna2Button1.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            guna2Button1.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            guna2Button1.FillColor = Color.Teal;
+            guna2Button1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            guna2Button1.ForeColor = Color.White;
+            guna2Button1.Location = new Point(296, 13);
+            guna2Button1.Name = "guna2Button1";
+            guna2Button1.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            guna2Button1.Size = new Size(120, 66);
+            guna2Button1.TabIndex = 18;
+            guna2Button1.Text = "PAY";
+            guna2Button1.Click += guna2Button1_Click;
             // 
-            // button4
+            // btnRemoveAll
             // 
-            button4.BackColor = Color.Black;
-            button4.Cursor = Cursors.Hand;
-            button4.FlatStyle = FlatStyle.Flat;
-            button4.ForeColor = Color.White;
-            button4.Location = new Point(192, 189);
-            button4.Margin = new Padding(4);
-            button4.Name = "button4";
-            button4.Size = new Size(171, 80);
-            button4.TabIndex = 21;
-            button4.Text = "+100";
-            button4.UseVisualStyleBackColor = false;
-            button4.Click += button4_Click;
+            btnRemoveAll.CustomizableEdges = customizableEdges7;
+            btnRemoveAll.DisabledState.BorderColor = Color.DarkGray;
+            btnRemoveAll.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnRemoveAll.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnRemoveAll.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnRemoveAll.FillColor = Color.Teal;
+            btnRemoveAll.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            btnRemoveAll.ForeColor = Color.White;
+            btnRemoveAll.Location = new Point(422, 13);
+            btnRemoveAll.Name = "btnRemoveAll";
+            btnRemoveAll.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            btnRemoveAll.Size = new Size(120, 66);
+            btnRemoveAll.TabIndex = 17;
+            btnRemoveAll.Text = "PAY";
+            btnRemoveAll.Click += btnRemoveAll_Click;
             // 
-            // button6
+            // btnCancel
             // 
-            button6.BackColor = Color.Black;
-            button6.Cursor = Cursors.Hand;
-            button6.FlatStyle = FlatStyle.Flat;
-            button6.ForeColor = Color.White;
-            button6.Location = new Point(371, 189);
-            button6.Margin = new Padding(4);
-            button6.Name = "button6";
-            button6.Size = new Size(171, 80);
-            button6.TabIndex = 24;
-            button6.Text = "+500";
-            button6.UseVisualStyleBackColor = false;
+            btnCancel.CustomizableEdges = customizableEdges9;
+            btnCancel.DisabledState.BorderColor = Color.DarkGray;
+            btnCancel.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnCancel.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnCancel.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnCancel.FillColor = Color.Teal;
+            btnCancel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            btnCancel.ForeColor = Color.White;
+            btnCancel.Location = new Point(17, 13);
+            btnCancel.Name = "btnCancel";
+            btnCancel.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            btnCancel.Size = new Size(120, 66);
+            btnCancel.TabIndex = 16;
+            btnCancel.Text = "CANCEL";
             // 
-            // button7
+            // txtReceiveAmount
             // 
-            button7.BackColor = Color.Black;
-            button7.Cursor = Cursors.Hand;
-            button7.FlatStyle = FlatStyle.Flat;
-            button7.ForeColor = Color.White;
-            button7.Location = new Point(371, 101);
-            button7.Margin = new Padding(4);
-            button7.Name = "button7";
-            button7.Size = new Size(171, 80);
-            button7.TabIndex = 23;
-            button7.Text = "+20";
-            button7.UseVisualStyleBackColor = false;
+            txtReceiveAmount.CustomizableEdges = customizableEdges3;
+            txtReceiveAmount.DefaultText = "";
+            txtReceiveAmount.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
+            txtReceiveAmount.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+            txtReceiveAmount.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+            txtReceiveAmount.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            txtReceiveAmount.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
+            txtReceiveAmount.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            txtReceiveAmount.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
+            txtReceiveAmount.Location = new Point(17, 169);
+            txtReceiveAmount.Name = "txtReceiveAmount";
+            txtReceiveAmount.PasswordChar = '\0';
+            txtReceiveAmount.PlaceholderText = "RECEIVE AMOUNT";
+            txtReceiveAmount.SelectedText = "";
+            txtReceiveAmount.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            txtReceiveAmount.Size = new Size(521, 36);
+            txtReceiveAmount.TabIndex = 35;
             // 
-            // button8
+            // guna2HtmlLabel10
             // 
-            button8.BackColor = Color.Black;
-            button8.Cursor = Cursors.Hand;
-            button8.FlatStyle = FlatStyle.Flat;
-            button8.ForeColor = Color.White;
-            button8.Location = new Point(371, 13);
-            button8.Margin = new Padding(4);
-            button8.Name = "button8";
-            button8.Size = new Size(171, 80);
-            button8.TabIndex = 22;
-            button8.Text = "+1";
-            button8.UseVisualStyleBackColor = false;
-            // 
-            // button9
-            // 
-            button9.BackColor = Color.Black;
-            button9.Cursor = Cursors.Hand;
-            button9.FlatStyle = FlatStyle.Flat;
-            button9.ForeColor = Color.White;
-            button9.Location = new Point(13, 277);
-            button9.Margin = new Padding(4);
-            button9.Name = "button9";
-            button9.Size = new Size(171, 80);
-            button9.TabIndex = 27;
-            button9.Text = "+1000";
-            button9.UseVisualStyleBackColor = false;
-            // 
-            // button10
-            // 
-            button10.BackColor = Color.Black;
-            button10.Cursor = Cursors.Hand;
-            button10.FlatStyle = FlatStyle.Flat;
-            button10.ForeColor = Color.White;
-            button10.Location = new Point(13, 189);
-            button10.Margin = new Padding(4);
-            button10.Name = "button10";
-            button10.Size = new Size(171, 80);
-            button10.TabIndex = 26;
-            button10.Text = "+50";
-            button10.UseVisualStyleBackColor = false;
-            button10.Click += button10_Click;
-            // 
-            // button11
-            // 
-            button11.BackColor = Color.Black;
-            button11.Cursor = Cursors.Hand;
-            button11.FlatStyle = FlatStyle.Flat;
-            button11.ForeColor = Color.White;
-            button11.Location = new Point(13, 101);
-            button11.Margin = new Padding(4);
-            button11.Name = "button11";
-            button11.Size = new Size(171, 80);
-            button11.TabIndex = 25;
-            button11.Text = "+5";
-            button11.UseVisualStyleBackColor = false;
-            // 
-            // button12
-            // 
-            button12.BackColor = Color.Black;
-            button12.Cursor = Cursors.Hand;
-            button12.FlatStyle = FlatStyle.Flat;
-            button12.ForeColor = Color.White;
-            button12.Location = new Point(13, 13);
-            button12.Margin = new Padding(4);
-            button12.Name = "button12";
-            button12.Size = new Size(171, 80);
-            button12.TabIndex = 28;
-            button12.Text = "+.5";
-            button12.UseVisualStyleBackColor = false;
-            button12.Click += button12_Click;
+            guna2HtmlLabel10.BackColor = Color.Transparent;
+            guna2HtmlLabel10.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            guna2HtmlLabel10.ForeColor = Color.Black;
+            guna2HtmlLabel10.Location = new Point(17, 99);
+            guna2HtmlLabel10.Name = "guna2HtmlLabel10";
+            guna2HtmlLabel10.Size = new Size(107, 23);
+            guna2HtmlLabel10.TabIndex = 37;
+            guna2HtmlLabel10.Text = "AMOUNT DUE";
             // 
             // lblAmountDue
             // 
-            lblAmountDue.AutoSize = true;
-            lblAmountDue.Location = new Point(470, 294);
+            lblAmountDue.BackColor = Color.Transparent;
+            lblAmountDue.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            lblAmountDue.ForeColor = Color.Black;
+            lblAmountDue.Location = new Point(504, 99);
             lblAmountDue.Name = "lblAmountDue";
-            lblAmountDue.Size = new Size(48, 18);
-            lblAmountDue.TabIndex = 31;
+            lblAmountDue.Size = new Size(34, 23);
+            lblAmountDue.TabIndex = 36;
             lblAmountDue.Text = "0.00";
             // 
-            // label2
+            // guna2HtmlLabel1
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(215, 325);
-            label2.Name = "label2";
-            label2.Size = new Size(158, 18);
-            label2.TabIndex = 30;
-            label2.Text = "Amount Received";
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(215, 294);
-            label1.Name = "label1";
-            label1.Size = new Size(118, 18);
-            label1.TabIndex = 29;
-            label1.Text = "Amount Due:";
-            // 
-            // txtLocationId
-            // 
-            txtLocationId.Location = new Point(215, 360);
-            txtLocationId.Name = "txtLocationId";
-            txtLocationId.Size = new Size(316, 26);
-            txtLocationId.TabIndex = 32;
-            txtLocationId.TextAlign = HorizontalAlignment.Center;
+            guna2HtmlLabel1.BackColor = Color.Transparent;
+            guna2HtmlLabel1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            guna2HtmlLabel1.ForeColor = Color.Black;
+            guna2HtmlLabel1.Location = new Point(17, 128);
+            guna2HtmlLabel1.Name = "guna2HtmlLabel1";
+            guna2HtmlLabel1.Size = new Size(136, 23);
+            guna2HtmlLabel1.TabIndex = 38;
+            guna2HtmlLabel1.Text = "RECEIVE AMOUNT";
             // 
             // Tenders
             // 
             AutoScaleDimensions = new SizeF(10F, 18F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(553, 504);
-            Controls.Add(txtLocationId);
+            ClientSize = new Size(553, 307);
+            Controls.Add(guna2Panel2);
+            Controls.Add(guna2HtmlLabel1);
+            Controls.Add(guna2HtmlLabel10);
             Controls.Add(lblAmountDue);
-            Controls.Add(label2);
-            Controls.Add(label1);
-            Controls.Add(button12);
-            Controls.Add(button9);
-            Controls.Add(button10);
-            Controls.Add(button11);
-            Controls.Add(button6);
-            Controls.Add(button7);
-            Controls.Add(button8);
-            Controls.Add(button4);
-            Controls.Add(button3);
-            Controls.Add(button2);
-            Controls.Add(button1);
-            Controls.Add(button5);
-            Controls.Add(btnExit);
+            Controls.Add(txtReceiveAmount);
+            Controls.Add(guna2Panel1);
             Font = new Font("Courier New", 12F, FontStyle.Regular, GraphicsUnit.Point);
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(4);
@@ -299,28 +223,24 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Tenders";
             Load += Tenders_Load;
+            guna2Panel2.ResumeLayout(false);
+            guna2Panel2.PerformLayout();
+            guna2Panel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private Button button5;
-        private Button btnExit;
-        private Button button1;
-        private Button button2;
-        private Button button3;
-        private Button button4;
-        private Button button6;
-        private Button button7;
-        private Button button8;
-        private Button button9;
-        private Button button10;
-        private Button button11;
-        private Button button12;
-        private Label lblAmountDue;
-        private Label label2;
-        private Label label1;
-        private TextBox txtLocationId;
+        private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
+        private Guna.UI2.WinForms.Guna2Panel guna2Panel2;
+        private Guna.UI2.WinForms.Guna2HtmlLabel lblTitle;
+        private Guna.UI2.WinForms.Guna2Panel guna2Panel1;
+        private Guna.UI2.WinForms.Guna2Button btnRemoveAll;
+        private Guna.UI2.WinForms.Guna2Button btnCancel;
+        private Guna.UI2.WinForms.Guna2TextBox txtReceiveAmount;
+        private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel1;
+        private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel10;
+        private Guna.UI2.WinForms.Guna2HtmlLabel lblAmountDue;
+        private Guna.UI2.WinForms.Guna2Button guna2Button1;
     }
 }

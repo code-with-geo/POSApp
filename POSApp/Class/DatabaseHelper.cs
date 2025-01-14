@@ -18,7 +18,6 @@ namespace POSApp.Class
 
         public static void CreateDatabase()
         {
-            MessageBox.Show(DbPath.ToString());
             try
             {
                 // Create the folder if it doesn't exist
@@ -40,16 +39,41 @@ namespace POSApp.Class
                 // Connect to the database and create tables
                 using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
                 {
-                    
+
                     connection.Open();
 
                     // Create multiple tables
                     string[] tableQueries = new string[]
                     {
+                         // Users Table
+                        @"
+                        CREATE TABLE IF NOT EXISTS Users (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            UserId INTEGER NOT NULL UNIQUE,
+                            Name VARCHAR(100) NOT NULL,
+                            IsRole  INTEGER NOT NULL,
+                            DateCreated DATETIME DEFAULT (DATETIME('now'))     
+                        );",
+
+                         // Customer Table
+                        @"
+                        CREATE TABLE IF NOT EXISTS Customers (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            AccountId VARCHAR(100) NOT NULL UNIQUE,
+                            FirstName VARCHAR(100) NOT NULL,
+                            LastName VARCHAR(100) NOT NULL,
+                            ContactNo VARCHAR(100) NOT NULL, 
+                            Email VARCHAR(100) NOT NULL,       
+                            TransactionCount  INTEGER NOT NULL,
+                            Points  INTEGER NOT NULL,
+                            DateCreated DATETIME DEFAULT (DATETIME('now'))     
+                        );",
+
                         // Inventory Table
                         @"
                         CREATE TABLE IF NOT EXISTS Inventory (
-                            InventoryId INTEGER PRIMARY KEY,
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            InventoryId INTEGER NOT NULL UNIQUE,
                             Specification VARCHAR(55) NOT NULL,
                             Units INT NOT NULL,
                             ProductId INT NOT NULL,
@@ -63,7 +87,8 @@ namespace POSApp.Class
                         // Products Table
                         @"
                         CREATE TABLE IF NOT EXISTS Products (
-                            Id INTEGER PRIMARY KEY,
+                            ProductId INTEGER PRIMARY KEY AUTOINCREMENT,
+                            Id INTEGER NOT NULL UNIQUE,
                             Barcode VARCHAR(100) NOT NULL,
                             Name VARCHAR(100) NOT NULL,
                             Description VARCHAR(100) NOT NULL,
@@ -82,7 +107,8 @@ namespace POSApp.Class
                         // Category Table
                         @"
                         CREATE TABLE IF NOT EXISTS Category (
-                            CategoryId INTEGER PRIMARY KEY,
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            CategoryId INTEGER NOT NULL UNIQUE,
                             Name VARCHAR(100) NOT NULL,
                             Status  INTEGER NOT NULL,
                             DateCreated DATETIME DEFAULT (DATETIME('now'))     
@@ -90,8 +116,9 @@ namespace POSApp.Class
 
                         // Locations Table
                         @"
-                        CREATE TABLE IF NOT EXISTS Locations (
-                            LocationId INTEGER PRIMARY KEY,
+                           CREATE TABLE IF NOT EXISTS Locations (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            LocationId INTEGER NOT NULL UNIQUE,
                             Name VARCHAR(50) NOT NULL,
                             Password VARCHAR(100) NOT NULL,
                             Status INTEGER NOT NULL,
@@ -101,12 +128,117 @@ namespace POSApp.Class
                         // Discount Table
                         @"
                         CREATE TABLE IF NOT EXISTS Discounts (
-                            DiscountId INTEGER PRIMARY KEY,
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            DiscountId INTEGER NOT NULL UNIQUE,
                             Name VARCHAR(100) NOT NULL,
                             Percentage INTEGER NOT NULL,
                             Status  INTEGER NOT NULL,
                             DateCreated DATETIME DEFAULT (DATETIME('now'))     
+                        );",
+
+                        // Cash Drawer Table
+                        @"
+                        CREATE TABLE IF NOT EXISTS CashDrawer (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            DrawerId INTEGER NOT NULL UNIQUE,
+                            UserId INTEGER NOT NULL,
+                            InitialCash DECIMAL(18, 2) NOT NULL,
+                            Withdrawals DECIMAL(18, 2) NOT NULL,
+                            Expenses DECIMAL(18, 2) NOT NULL,
+                            DrawerCash DECIMAL(18, 2) NOT NULL,    
+                            TimeStart DATETIME NOT NULL,
+                            DateCreated DATETIME DEFAULT (DATETIME('now'))     
+                        );",
+
+                         // Initial Cash Table
+                        @"
+                        CREATE TABLE IF NOT EXISTS InitialCash (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            DrawerId INTEGER NOT NULL,
+                            Cash DECIMAL(18, 2) NOT NULL,
+                            Remarks VARCHAR(100) NOT NULL,
+                            IsAdditional  INTEGER NOT NULL,
+                            DateCreated DATETIME DEFAULT (DATETIME('now'))     
+                        );",
+
+                         // Withdrawals Cash Table
+                          @"
+                        CREATE TABLE IF NOT EXISTS Withdrawals (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            DrawerId INTEGER NOT NULL,
+                            Cash DECIMAL(18, 2) NOT NULL,
+                            Remarks VARCHAR(100) NOT NULL,
+                            DateCreated DATETIME DEFAULT (DATETIME('now'))     
+                        );",
+
+                         // Expenses Cash Table
+                          @"
+                        CREATE TABLE IF NOT EXISTS Expenses (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            DrawerId INTEGER NOT NULL,
+                            Cash DECIMAL(18, 2) NOT NULL,
+                            Remarks VARCHAR(100) NOT NULL,
+                            DateCreated DATETIME DEFAULT (DATETIME('now'))     
+                        );",
+
+                        // HoldProducts Table
+                        @"
+                        CREATE TABLE IF NOT EXISTS HoldProducts (
+                            HoldProductId INTEGER PRIMARY KEY AUTOINCREMENT,
+                            ReferenceId INTEGER NOT NULL,
+                            ProductId INTEGER NOT NULL,
+                            Barcode VARCHAR(100) NOT NULL,
+                            Name VARCHAR(100) NOT NULL,
+                            Description VARCHAR(100) NOT NULL,
+                            Price  DECIMAL(18, 2) NOT NULL,
+                            Quantity  INTEGER NOT NULL,
+                            VatAmount  DECIMAL(18, 2) NOT NULL,
+                            SubTotal  DECIMAL(18, 2) NOT NULL,
+                            AppliedDiscount  DECIMAL(18, 2) NOT NULL,
+                            TotalDiscount  DECIMAL(18, 2) NOT NULL,
+                            DiscountId  INTEGER NOT NULL,
+                            IsVat  INTEGER NOT NULL,
+                            HasDiscountApplied  INTEGER NOT NULL,
+                            DiscountPercentage  DECIMAL(18, 2) NOT NULL     
+                        );",
+
+                         // HoldOrders Table
+                        @"
+                        CREATE TABLE IF NOT EXISTS HoldOrders (
+                            HoldId INTEGER PRIMARY KEY AUTOINCREMENT,
+                            ReferenceID INTEGER NOT NULL,
+                            EmployeeId INTEGER NOT NULL,
+                            DateCreated DATETIME DEFAULT (DATETIME('now'))     
+                        );",
+
+                           // Orders Table
+                        @"
+                        CREATE TABLE IF NOT EXISTS Orders (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            InvoiceNumber INTEGER NOT NULL,
+                            UserId INTEGER NOT NULL,
+                            LocationId INTEGER NOT NULL,
+                            AccountId INTEGER NOT NULL,
+                            TotalAmount  DECIMAL(18, 2) NOT NULL,
+                            ReceivedAmount  DECIMAL(18, 2) NOT NULL,
+                            PaymentMethod INTEGER NOT NULL,
+                            DateCreated DATETIME DEFAULT (DATETIME('now'))     
+                        );",
+
+                          // OrderProducts Table
+                        @"
+                        CREATE TABLE IF NOT EXISTS OrderProducts (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            InvoiceNumber INTEGER NOT NULL,
+                            ProductId INTEGER NOT NULL,
+                            Quantity INTEGER NOT NULL,
+                            SubTotal  DECIMAL(18, 2) NOT NULL,
+                            DiscountId  INTEGER NOT NULL,
+                            DateCreated DATETIME DEFAULT (DATETIME('now'))     
                         );"
+
+
+
 
 
                     };
@@ -399,6 +531,61 @@ namespace POSApp.Class
 
         }
 
+        public static async Task SyncUser(string apiUrl, string authToken)
+        {
+
+            await SyncDataFromApi<Users>(
+                apiUrl,
+                authToken,
+                "Users",
+                async (user, command) =>
+                {
+                    // Clear parameters at the beginning of each operation
+                    command.Parameters.Clear();
+
+                    // Check if the product already exists
+                    string checkQuery = "SELECT COUNT(1) FROM Users WHERE UserId = @UserId";
+                    command.CommandText = checkQuery;
+                    command.Parameters.AddWithValue("@UserId", user.Id);
+
+                    long count = (long)(await command.ExecuteScalarAsync());
+
+                    if (count == 0)
+                    {
+                        command.CommandText = @"
+                                            INSERT INTO Users (UserId, Name, IsRole)
+                                            VALUES (@UserId, @Name, @IsRole);";
+                    }
+                    else
+                    {
+                        command.CommandText = @"
+                            UPDATE Users
+                            SET 
+                                Name = @Name,
+                                IsRole = @IsRole,
+                            WHERE UserId = @UserId;";
+                    }
+
+                    // Clear parameters before re-adding them for the INSERT or UPDATE query
+                    command.Parameters.Clear();
+
+                    // Add all required parameters
+                    command.Parameters.AddWithValue("@UserId", user.Id);
+                    command.Parameters.AddWithValue("@Name", user.Name);
+                    command.Parameters.AddWithValue("@IsRole", user.IsRole);
+
+
+                    // Execute the query
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                    // Log for debugging
+                    MessageBox.Show($"Rows affected: {rowsAffected}. Processed UserId: {user.Id}, Name: {user.Name}, IsRole: {user.IsRole}");
+
+                }
+            );
+
+        }
+
         public static async Task SyncDataFromApi<T>(
             string apiUrl,
             string authToken,
@@ -641,7 +828,7 @@ namespace POSApp.Class
             return null;
         }
 
-        public static DataTable GetFilteredInventory(string filter)
+        public static DataTable GetFilteredInventoryByName(string filter)
         {
             DataTable dataTable = new DataTable();
 
@@ -663,6 +850,51 @@ namespace POSApp.Class
                 FROM Inventory I 
                 INNER JOIN Products P ON I.ProductId = P.Id
                 WHERE P.Name LIKE @Filter || '%'"; // Filters names starting with the input
+
+                    using (var command = new SQLiteCommand(query, connection))
+                    {
+                        // Add filter parameter to prevent SQL injection
+                        command.Parameters.AddWithValue("@Filter", filter);
+
+                        using (var adapter = new SQLiteDataAdapter(command))
+                        {
+                            adapter.Fill(dataTable);
+                        }
+                    }
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error filtering inventory: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return dataTable;
+        }
+
+        public static DataTable GetFilteredInventoryByBarcode(string filter)
+        {
+            DataTable dataTable = new DataTable();
+
+            try
+            {
+                using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+                {
+                    connection.Open();
+
+                    string query = @"
+                SELECT 
+                    P.Barcode, 
+                    P.Name, 
+                    I.Units, 
+                    I.Specification, 
+                    P.RetailPrice,
+                    P.WholesalePrice,
+                    P.SupplierPrice  
+                FROM Inventory I 
+                INNER JOIN Products P ON I.ProductId = P.Id
+                WHERE P.Barcode LIKE @Filter || '%'"; // Filters names starting with the input
 
                     using (var command = new SQLiteCommand(query, connection))
                     {
@@ -723,5 +955,365 @@ namespace POSApp.Class
 
             return dataTable;
         }
+
+        public static void SaveHoldProducts(List<Cart> carts, int refId)
+        {
+            using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+            {
+                connection.Open();
+
+                string query = @"
+            INSERT INTO HoldProducts 
+            (ReferenceId, ProductId, Barcode, Name, Description, Price, Quantity, VatAmount, SubTotal, AppliedDiscount, 
+             TotalDiscount, DiscountId, IsVat, HasDiscountApplied, DiscountPercentage) 
+            VALUES 
+            (@ReferenceId, @ProductId, @Barcode, @Name, @Description, @Price, @Quantity, @VatAmount, @SubTotal, @AppliedDiscount, 
+             @TotalDiscount, @DiscountId, @IsVat, @HasDiscountApplied, @DiscountPercentage)";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    foreach (var cart in carts)
+                    {
+                        // Add parameters to the query
+                        command.Parameters.Clear();
+                        command.Parameters.AddWithValue("@ReferenceId", refId);
+                        command.Parameters.AddWithValue("@ProductId", cart.Id);
+                        command.Parameters.AddWithValue("@Barcode", cart.Barcode ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@Name", cart.Name ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@Description", cart.Description ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@Price", cart.Price);
+                        command.Parameters.AddWithValue("@Quantity", cart.Quantity);
+                        command.Parameters.AddWithValue("@VatAmount", cart.VatAmount);
+                        command.Parameters.AddWithValue("@SubTotal", cart.SubTotal);
+                        command.Parameters.AddWithValue("@AppliedDiscount", cart.AppliedDiscount);
+                        command.Parameters.AddWithValue("@TotalDiscount", cart.TotalDiscount);
+                        command.Parameters.AddWithValue("@DiscountId", cart.DiscountId);
+                        command.Parameters.AddWithValue("@IsVat", cart.IsVat);
+                        command.Parameters.AddWithValue("@HasDiscountApplied", cart.HasDiscountApplied ? 1 : 0);
+                        command.Parameters.AddWithValue("@DiscountPercentage", cart.DiscountPercentage);
+
+                        // Execute the query
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                connection.Close();
+            }
+        }
+
+        public static void SaveHoldSale(int refId, int employeeId)
+        {
+            using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+            {
+                connection.Open();
+
+                string query = @"
+                    INSERT INTO HoldOrders 
+                    (ReferenceId, EmployeeId) 
+                    VALUES 
+                    (@ReferenceId, @EmployeeId)";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    // Add parameters to the query
+                    command.Parameters.AddWithValue("@ReferenceId", refId);
+                    command.Parameters.AddWithValue("@EmployeeId", employeeId);
+                    // Execute the query
+                    command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+            }
+        }
+
+        public static DataTable GetAllHoldSale()
+        {
+            DataTable dataTable = new DataTable();
+
+            try
+            {
+                using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+                {
+                    connection.Open();
+
+                    string query = @"
+                        SELECT 
+                            ReferenceId,
+                            EmployeeId, 
+                            DateCreated
+                        FROM HoldOrders;";
+
+                    using (var command = new SQLiteCommand(query, connection))
+                    {
+                        using (var adapter = new SQLiteDataAdapter(command))
+                        {
+                            adapter.Fill(dataTable);
+                        }
+                    }
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching sale: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return dataTable;
+        }
+
+        public static void DeleteAllHoldProduct()
+        {
+            using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+            {
+                connection.Open();
+
+                string query = "DELETE FROM HoldProducts";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    // Execute the delete query
+                    command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+            }
+        }
+
+        public static void DeleteAllHoldSale()
+        {
+            using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+            {
+                connection.Open();
+
+                string query = "DELETE FROM HoldOrders";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    // Execute the delete query
+                    command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+            }
+        }
+
+        public static void DeleteHoldProductByRefId(int refId)
+        {
+            using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+            {
+                connection.Open();
+
+                string query = $"DELETE FROM HoldOrders WHERE ReferenceId = {refId}";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    // Execute the delete query
+                    command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+            }
+        }
+
+        public static void DeleteHoldSaleByRefId(int refId)
+        {
+            using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+            {
+                connection.Open();
+
+                string query = $"DELETE FROM HoldProducts WHERE ReferenceId = {refId}";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    // Execute the delete query
+                    command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+            }
+        }
+
+        public static List<Cart> GetAllHoldOrdersByRefId(int refId)
+        {
+            var holdOrders = new List<Cart>();
+
+            using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+            {
+                connection.Open();
+
+                string query = $"SELECT * FROM HoldProducts WHERE ReferenceId = {refId}";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // Map the database row to a Cart object
+                            var cart = new Cart
+                            {
+                                Id = Convert.ToInt32(reader["ProductId"]),
+                                Barcode = reader["Barcode"] != DBNull.Value ? reader["Barcode"].ToString() : null,
+                                Name = reader["Name"] != DBNull.Value ? reader["Name"].ToString() : null,
+                                Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
+                                Price = Convert.ToDecimal(reader["Price"]),
+                                Quantity = Convert.ToInt32(reader["Quantity"]),
+                                VatAmount = Convert.ToDecimal(reader["VatAmount"]),
+                                SubTotal = Convert.ToDecimal(reader["SubTotal"]),
+                                AppliedDiscount = Convert.ToDecimal(reader["AppliedDiscount"]),
+                                TotalDiscount = Convert.ToDecimal(reader["TotalDiscount"]),
+                                DiscountId = reader["DiscountId"] != DBNull.Value ? Convert.ToInt32(reader["DiscountId"]) : 0,
+                                IsVat = Convert.ToInt32(reader["IsVat"]),
+                                HasDiscountApplied = Convert.ToBoolean(reader["HasDiscountApplied"]),
+                                DiscountPercentage = Convert.ToDecimal(reader["DiscountPercentage"])
+                            };
+
+                            holdOrders.Add(cart);
+                        }
+                    }
+                }
+
+                connection.Close();
+            }
+            return holdOrders;
+        }
+
+        public static int IsEmployeeExist(int userId)
+        {
+            using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+            {
+                connection.Open();
+
+                string query = $"SELECT COUNT(*) FROM Users WHERE UserId = @UserId";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    // Use parameterized query to prevent SQL injection
+                    command.Parameters.AddWithValue("@UserId", userId);
+
+                    // Execute the query and get the count
+                    object result = command.ExecuteScalar();
+
+                    // Convert the result to an integer
+                    int count = Convert.ToInt32(result);
+
+                    return count;
+                }
+            }
+        }
+        public static void SaveCustomer(Customers customer)
+        {
+            using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+            {
+                connection.Open();
+
+                string query = @"
+                INSERT INTO Customers (AccountId, FirstName, LastName, ContactNo, Email, TransactionCount, Points)
+                VALUES (@AccountId, @FirstName, @LastName, @ContactNo, @Email, @TransactionCount, @Points);";
+
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@AccountId", customer.AccountId);
+                    command.Parameters.AddWithValue("@FirstName", customer.FirstName);
+                    command.Parameters.AddWithValue("@LastName", customer.LastName);
+                    command.Parameters.AddWithValue("@ContactNo", customer.ContactNo);
+                    command.Parameters.AddWithValue("@Email", customer.Email);
+                    command.Parameters.AddWithValue("@TransactionCount", customer.TransactionCount);
+                    command.Parameters.AddWithValue("@Points", customer.Points);
+                    // Execute the query
+                    command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+            }
+        }
+
+        public static void UpdateCustomerTransaction(string AccountId, int Points)
+        {
+            using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+            {
+                connection.Open();
+
+                string query = @"
+                UPDATE Customers SET TransactionCount= TransactionCount + 1, Points = Points + @Points
+                WHERE AccountId = @AccountId;";
+
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@AccountId", AccountId);
+                    command.Parameters.AddWithValue("@Points", Points);
+                    // Execute the query
+                    command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+            }
+        }
+
+        public static void SaveOrderProducts(List<Cart> carts, int invoiceNo)
+        {
+            using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+            {
+                connection.Open();
+
+                string query = @"
+                    INSERT INTO OrderProducts 
+                    (InvoiceNumber, ProductId, Quantity, SubTotal, DiscountId) 
+                    VALUES 
+                    (@InvoiceNumber, @ProductId, @Quantity, @SubTotal, @DiscountId)";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    foreach (var cart in carts)
+                    {
+                        // Add parameters to the query
+                        command.Parameters.Clear();
+                        command.Parameters.AddWithValue("@InvoiceNumber", invoiceNo);
+                        command.Parameters.AddWithValue("@ProductId", cart.Id);
+                        command.Parameters.AddWithValue("@Quantity", cart.Quantity);
+                        command.Parameters.AddWithValue("@SubTotal", cart.SubTotal);
+                        command.Parameters.AddWithValue("@DiscountId", cart.DiscountId);
+                        // Execute the query
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                connection.Close();
+            }
+        }
+
+        public static void SaveOrder(int invoiceNo, int userId, int locationId, string AccountId, decimal totalAmount, decimal receivedAmount, int paymentMethod)
+        {
+            using (var connection = new SQLiteConnection($"Data Source={DbPath};Version=3;"))
+            {
+                connection.Open();
+
+                string query = @"
+                INSERT INTO Orders (InvoiceNumber, UserId, LocationId, AccountId, TotalAmount, ReceivedAmount, PaymentMethod)
+                VALUES (@InvoiceNumber, @UserId, @LocationId, @AccountId, @TotalAmount, @ReceivedAmount, @PaymentMethod);";
+
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@InvoiceNumber", invoiceNo);
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    command.Parameters.AddWithValue("@LocationId", locationId);
+                    command.Parameters.AddWithValue("@AccountId", AccountId);
+                    command.Parameters.AddWithValue("@TotalAmount", totalAmount);
+                    command.Parameters.AddWithValue("@ReceivedAmount", receivedAmount);
+                    command.Parameters.AddWithValue("@PaymentMethod", paymentMethod);
+
+                    // Execute the query
+                    command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+            }
+        }
+
+
     }
 }

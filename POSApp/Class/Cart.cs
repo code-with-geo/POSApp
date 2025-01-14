@@ -16,7 +16,11 @@ namespace POSApp.Class
         public int Quantity { get; set; }
         public decimal VatAmount { get; set; }  // Add VatAmount property
         public decimal SubTotal { get; set; }
+        public decimal AppliedDiscount { get; set; }
+        public decimal TotalDiscount { get; set; }
         public int DiscountId { get; set; }
         public int IsVat { get; set; }
+        public bool HasDiscountApplied { get; set; }
+        public decimal DiscountPercentage { get; set; }
     }
 }

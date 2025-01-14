@@ -26,13 +26,18 @@ namespace POSApp
         private void BrowseProduct_Load(object sender, EventArgs e)
         {
             var inventoryData = DatabaseHelper.GetInventory();
-            dataGridView1.DataSource = inventoryData;
+            dgvProducts.DataSource = inventoryData;
         }
 
-        private void txtLocationId_TextChanged(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void txtSearch_TextChanged(object sender, EventArgs e)
         {
             // Get the text from the search box
-            string searchText = txtLocationId.Text.Trim();
+            string searchText = txtSearch.Text.Trim();
 
             // Fetch data based on the search text
             DataTable filteredData;
@@ -44,13 +49,24 @@ namespace POSApp
             }
             else
             {
-                // Fetch filtered data based on the input
-                filteredData = DatabaseHelper.GetFilteredInventory(searchText);
+                if (cmbKey.SelectedIndex == 0)
+                {
+                    filteredData = DatabaseHelper.GetFilteredInventoryByName(searchText);
+                    // Bind the filtered or full data to the DataGridView
+                    dgvProducts.DataSource = null;
+                    dgvProducts.DataSource = filteredData;
+                }
+                else
+                {
+                    filteredData = DatabaseHelper.GetFilteredInventoryByBarcode(searchText);
+                    // Bind the filtered or full data to the DataGridView
+                    dgvProducts.DataSource = null;
+                    dgvProducts.DataSource = filteredData;
+                }
+
             }
 
-            // Bind the filtered or full data to the DataGridView
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = filteredData;
+            
         }
     }
 }

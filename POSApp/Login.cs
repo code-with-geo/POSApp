@@ -39,8 +39,8 @@ namespace POSApp
 
                 if (IsValid)
                 {
-                    Main mainForm = new Main();
-                    mainForm.Show();
+                    POS pos = new POS();
+                    pos.Show();
                     this.Hide();
                 }
                 else

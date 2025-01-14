@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using POSApp.Class;
 
 namespace POSApp
 {
@@ -11,48 +12,19 @@ namespace POSApp
         private readonly HttpClient _httpClient;
         private string Token;
         public int CustomerId { get; private set; }
+        public string AccountId { get; private set; }
         public AddCustomer(string token)
         {
             InitializeComponent();
             Token = token;
         }
-
-        private void btnExit_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private async void btnSearch_Click(object sender, EventArgs e)
-        {
-            var customer = new
-            {
-                FirstName = txtFirstName.Text,
-                LastName = txtLastName.Text,
-                ContactNo = txtContactNo.Text,
-                Email = txtEmail.Text
-            };
-
-            int? newCustomerId = await InsertCustomerAsync(Token, customer);
-
-            if (newCustomerId.HasValue)
-            {
-                CustomerId = newCustomerId.Value;
-                this.DialogResult = DialogResult.OK; // Close with success
-                this.Hide();
-            }
-            else
-            {
-                MessageBox.Show("Invalid login credentials or API error.");
-            }
-        }
-
         private async Task<int?> InsertCustomerAsync(string token, object customer)
         {
             try
             {
                 // API endpoint for inserting a customer
                 string apiUrl = "https://localhost:7148/api/customers"; // Replace with your actual API URL
-               
+
                 var httpClient = new HttpClient();
                 var json = JsonConvert.SerializeObject(customer);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -89,6 +61,47 @@ namespace POSApp
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
+        }
+
+        private async void btnSave_Click(object sender, EventArgs e)
+        {
+            var request = new
+            {
+                FirstName = txtFirstName.Text,
+                LastName = txtLastName.Text,
+                ContactNo = txtContactNo.Text,
+                Email = txtEmail.Text
+            };
+
+            int? newCustomerId = await InsertCustomerAsync(Token, request);
+            Random random = new Random();
+            int randomId = random.Next(1000, int.MaxValue);
+            string accountId = "CUS" + randomId + DateTime.Now.Month.ToString() + DateTime.Now.Year.ToString();
+            var customer = new POSApp.Class.Customers
+            {
+                AccountId = accountId,
+                FirstName = txtFirstName.Text,
+                LastName = txtLastName.Text,
+                ContactNo = txtContactNo.Text,
+                Email = txtEmail.Text,
+                TransactionCount = 0,
+                Points = 0
+            };
+
+            DatabaseHelper.SaveCustomer(customer);
+
+            if (newCustomerId.HasValue)
+            {
+                AccountId = accountId;
+                CustomerId = newCustomerId.Value;
+                this.DialogResult = DialogResult.OK; // Close with success
+                this.Close();
+            }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

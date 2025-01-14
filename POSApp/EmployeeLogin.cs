@@ -3,7 +3,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.ApplicationServices;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using POSApp.Class;
 
 namespace POSApp
@@ -12,40 +14,13 @@ namespace POSApp
     {
         private readonly HttpClient _httpClient;
         public string Token { get; private set; }
+        public int UserId { get; private set; }
         public EmployeeLogin()
         {
             InitializeComponent();
             _httpClient = new HttpClient(); // Initialize HttpClient instance
         }
-
-        private async void btnLogin_Click(object sender, EventArgs e)
-        {
-            string username = txtUsername.Text;
-            string password = txtPassword.Text;
-
-            // Validate inputs
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-            {
-                MessageBox.Show("Please enter both username and password.");
-                return;
-            }
-
-            // Call API for login
-            var token = await AuthenticateUserAsync(username, password);
-
-            if (!string.IsNullOrEmpty(token))
-            {
-                Token = token;  // Store the token
-                this.DialogResult = DialogResult.OK; // Close with success
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("Invalid login credentials or API error.");
-            }
-        }
-
-        private async Task<string> AuthenticateUserAsync(string username, string password)
+        private async Task<(string Token, string UserId)> AuthenticateUserAsync(string username, string password)
         {
             try
             {
@@ -77,7 +52,7 @@ namespace POSApp
 
                     if (responseObject != null && !string.IsNullOrEmpty(responseObject.Token))
                     {
-                        return responseObject.Token; // Return the token
+                        return (responseObject.Token,responseObject.UserId); // Return the token
                     }
                 }
             }
@@ -87,7 +62,7 @@ namespace POSApp
                 MessageBox.Show($"Error: {ex.Message}");
             }
 
-            return null; // Return null if authentication failed or an error occurred
+            return (null,null); // Return null if authentication failed or an error occurred
         }
 
         // A class to represent the API response (assuming it returns a token)
@@ -95,6 +70,49 @@ namespace POSApp
         {
             [JsonProperty("Token")]
             public string Token { get; set; }
+
+            [JsonProperty("UserId")]
+            public string UserId { get; set; }
+        }
+
+        private async void btnContinue_Click(object sender, EventArgs e)
+        {
+            string username = txtUsername.Text;
+            string password = txtPassword.Text;
+
+            // Validate inputs
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Please enter both username and password.");
+                return;
+            }
+
+            // Call API for login
+            var response = await AuthenticateUserAsync(username, password);
+
+            if (!string.IsNullOrEmpty(response.Token))
+            {
+                int IsExist = DatabaseHelper.IsEmployeeExist(Convert.ToInt32(response.UserId));
+                if(IsExist == 0)
+                {
+                    string apiUrl = $"https://localhost:7148/api/auth/";
+                    await DatabaseHelper.SyncUser(apiUrl, response.Token);
+                }
+
+                Token = response.Token;  // Store the token
+                UserId = Convert.ToInt32(response.UserId); // Store the UserId
+                this.DialogResult = DialogResult.OK; // Close with success
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Invalid login credentials or API error.");
+            }
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

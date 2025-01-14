@@ -41,8 +41,8 @@ namespace POSApp
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Customers customer = new Customers(displayedProducts, Token);
-            customer.Show();
+            //Customers customer = new Customers(displayedProducts, Token);
+            //customer.Show();
         }
 
         private async void Main_Load(object sender, EventArgs e)
@@ -351,26 +351,26 @@ namespace POSApp
 
         private async void button6_Click(object sender, EventArgs e)
         {
-            //Customers customer = new Customers(displayedProducts, Token);
-            //customer.ShowDialog();
-            var customer = new Customers(displayedProducts, Token);
-            var result = customer.ShowDialog();
+            ////Customers customer = new Customers(displayedProducts, Token);
+            ////customer.ShowDialog();
+            //var customer = new Customers(displayedProducts, Token);
+            //var result = customer.ShowDialog();
 
-            // If the user successfully logged in, set the token
-            if (result == DialogResult.OK)
-            {
-                displayedProducts.Clear();
-                dataGridView1.DataSource = null;
-                dataGridView1.ColumnHeadersVisible = false;
-                RefreshDataGridView();
-                DisplayTotalAmount();
-                DisplayVatSale();
-                DisplayVatAmount();
-                lblDiscount.Text = 0.ToString("C2");
-                string apiUrl4 = "https://localhost:7148/api/inventory";
-                await DatabaseHelper.SyncInventory(apiUrl4, Token);
-                inventoryList = DatabaseHelper.LoadInventoryList();
-            }
+            //// If the user successfully logged in, set the token
+            //if (result == DialogResult.OK)
+            //{
+            //    displayedProducts.Clear();
+            //    dataGridView1.DataSource = null;
+            //    dataGridView1.ColumnHeadersVisible = false;
+            //    RefreshDataGridView();
+            //    DisplayTotalAmount();
+            //    DisplayVatSale();
+            //    DisplayVatAmount();
+            //    lblDiscount.Text = 0.ToString("C2");
+            //    string apiUrl4 = "https://localhost:7148/api/inventory";
+            //    await DatabaseHelper.SyncInventory(apiUrl4, Token);
+            //    inventoryList = DatabaseHelper.LoadInventoryList();
+            //}
 
         }
 
